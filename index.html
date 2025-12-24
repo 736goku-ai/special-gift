@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For You ❤️</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* --- GLOBAL STYLES --- */
+        :root {
+            --background: #080808;
+            --foreground: #d1d5dc;
+        }
+        body {
+            background-color: var(--background);
+            color: var(--foreground);
+            font-family: 'Quicksand', sans-serif;
+            overflow: hidden; /* Prevents scrolling the whole page */
+            user-select: none;
+        }
+        .font-dancing { font-family: 'Dancing Script', cursive; }
+
+        /* --- ANIMATIONS & TRANSITIONS --- */
+        /* Smooth fade between screens */
+        .screen {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px); /* Slide up effect */
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            width: 100%;
+            height: 100%;
+        }
+        .screen.active {
+            display: flex; /* Flex is important for centering */
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- COMPONENT STYLES (From your uploaded files) --- */
+        
+        /* The Pink Text Gradient from IntroScreen.jsx */
+        .text-gradient {
+            background: linear-gradient(to right, #f472b6, #fb7185, #f472b6); /* pink-400 via rose-400 */
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* The Button Gradient */
+        .btn-gradient {
+            background: linear-gradient(to right, #ec4899, #f43f5e, #ec4899);
+        }
+
+        /* Glassmorphism Cards from ComplimentsScreen.jsx */
+        .glass-card {
+            background-color: rgba(255, 255, 255, 0.05); /* bg-white/5 */
+            border: 1px solid rgba(236, 72, 153, 0.15);  /* border-pink-500/15 */
+            backdrop-filter: blur(12px);                 /* backdrop-blur-md */
+            box-shadow: 0 0 20px rgba(0,0,0,0.25);
+        }
+
+        /* Typewriter Cursor */
+        .typing-cursor::after {
+            content: "|";
+            animation: blink 1s step-start infinite;
+            color: #ec4899;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* Scrollbar hiding for clean look */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body>
+
+    <div id="app" class="relative h-screen w-full flex flex-col items-center justify-center p-4 overflow-hidden">
+
+        <div id="intro" class="screen active flex-col items-center justify-center text-center max-w-2xl">
+            <div class="mb-8 w-40 h-40 mx-auto rounded-full bg-gradient-to-br from-pink-700/20 to-rose-700/20 flex items-end justify-center border-2 border-pink-400/20 backdrop-blur-sm overflow-hidden animate-fade-in-up">
+                <img src="waving.gif" class="h-32 -mb-2 object-contain" alt="Waving">
+            </div>
+
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 font-dancing text-gradient leading-tight">
+                Hey Beautiful
+            </h1>
+
+            <p class="text-xl md:text-2xl text-gray-300 mb-10 font-light">
+                There’s something I want you to know.
+            </p>
+
+            <button onclick="startLoading()" class="btn-gradient text-white px-10 py-4 rounded-full text-lg font-semibold shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-3">
+                <span>Open My Heart</span>
+                <i data-lucide="heart" class="w-5 h-5 fill-current"></i>
+            </button>
+        </div>
+
+
+        <div id="loading" class="screen flex-col items-center justify-center w-full max-w-sm text-center">
+            <h2 class="text-3xl mb-6 font-dancing text-pink-400">Measuring cuteness...</h2>
+            
+            <h1 id="load-percent" class="text-7xl font-bold mb-8 text-white tabular-nums">0%</h1>
+            
+            <div class="w-full bg-zinc-900 h-4 rounded-full overflow-hidden border border-zinc-800 shadow-inner">
+                <div id="load-bar" class="btn-gradient h-full w-0 transition-all duration-100 ease-linear"></div>
+            </div>
+            
+            <p id="load-warning" class="mt-6 text-yellow-400 font-bold text-lg hidden animate-pulse">
+                ⚠️ WARNING: TOO CUTE TO HANDLE
+            </p>
+        </div>
+
+
+        <div id="compliments" class="screen flex-col items-center justify-center w-full max-w-xl text-center">
+            <div class="w-24 h-24 rounded-full bg-gradient-to-br from-pink-500/10 to-rose-500/10 border border-pink-400/20 flex items-center justify-center mb-8 backdrop-blur-md animate-bounce-slow">
+                <i data-lucide="heart" class="w-12 h-12 text-pink-400 fill-pink-400"></i>
+            </div>
+
+            <h2 class="text-4xl md:text-5xl font-dancing font-semibold mb-8 text-white">Just for you</h2>
+
+            <div class="flex flex-col gap-4 w-full px-2 mb-10">
+                <div class="glass-card px-6 py-4 rounded-2xl text-base md:text-lg text-gray-200 shadow-lg transform hover:scale-[1.02] transition-transform">
+                    You look adorable
+                </div>
+                <div class="glass-card px-6 py-4 rounded-2xl text-base md:text-lg text-gray-200 shadow-lg transform hover:scale-[1.02] transition-transform">
+                    You have the sweetest vibe
+                </div>
+                <div class="glass-card px-6 py-4 rounded-2xl text-base md:text-lg text-gray-200 shadow-lg transform hover:scale-[1.02] transition-transform">
+                    You make things feel lighter
+                </div>
+                <div class="glass-card px-6 py-4 rounded-2xl text-base md:text-lg text-gray-200 shadow-lg transform hover:scale-[1.02] transition-transform">
+                    You are naturally charming
+                </div>
+            </div>
+
+            <button onclick="goToMessage()" class="btn-gradient text-white px-8 py-3 rounded-full text-lg font-semibold shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
+                <span>See more</span>
+                <i data-lucide="arrow-right" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+
+        <div id="message" class="screen flex-col items-center justify-center w-full max-w-md text-center h-full py-10">
+            <h2 class="text-4xl md:text-5xl font-dancing font-semibold text-white mb-6 shrink-0">A little note for you</h2>
+
+            <div id="message-box" class="glass-card p-6 rounded-3xl w-full flex-grow max-h-[60vh] overflow-y-auto no-scrollbar text-left mb-8 border border-pink-500/20">
+                <p id="typed-text" class="text-lg md:text-xl leading-relaxed text-gray-200 font-medium whitespace-pre-wrap"></p>
+            </div>
+
+            <button id="final-btn" onclick="showScreen('final')" class="hidden btn-gradient text-white px-10 py-4 rounded-full text-lg font-semibold shadow-2xl hover:scale-105 transition-all animate-bounce shrink-0 flex items-center gap-2">
+                <span>One more thing</span>
+                <i data-lucide="arrow-right" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+
+        <div id="final" class="screen flex-col items-center justify-center text-center px-4">
+            <div class="w-48 h-48 p-6 rounded-full bg-pink-900/20 border-2 border-pink-400/30 backdrop-blur-md flex items-center justify-center overflow-hidden mb-8 shadow-2xl">
+                <img src="cute.gif" class="w-40 h-40 object-contain" alt="Cute">
+            </div>
+            
+            <h2 class="text-4xl md:text-5xl font-dancing text-white font-medium leading-snug drop-shadow-lg">
+                You’ll always be <br/> special to me ❤️
+            </h2>
+        </div>
+
+    </div>
+
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // The exact text from your MessageScreen.jsx
+        const messageText = "I just wanted to tell you something... you really are special in a way that’s hard to explain.\n\nThere’s a softness in the way you talk, a sweetness in the way you smile, and something genuine about you that just feels good to be around.\n\nYou don’t try to be anything extra, you’re just you, and that’s what makes you so lovely.";
+
+        // Screen Switching Logic
+        function showScreen(id) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(s => {
+                s.classList.remove('active');
+                setTimeout(() => {
+                    if (!s.classList.contains('active')) s.style.display = 'none';
+                }, 500); // Wait for fade out
+            });
+
+            // Show new screen
+            const active = document.getElementById(id);
+            active.style.display = 'flex';
+            // Small delay to allow display:flex to apply before adding opacity class
+            setTimeout(() => {
+                active.classList.add('active');
+            }, 50);
+        }
+
+        // Logic for Screen 2: Loading Bar
+        function startLoading() {
+            showScreen('loading');
+            let width = 0;
+            const bar = document.getElementById('load-bar');
+            const text = document.getElementById('load-percent');
+            const warning = document.getElementById('load-warning');
+            
+            // Speed of the bar
+            const interval = setInterval(() => {
+                width++;
+                
+                // Logic: Go up to 100 normally
+                if (width <= 100) {
+                    bar.style.width = width + '%';
+                    text.innerText = width + '%';
+                }
+                
+                // Logic: "Overload" effect from video (Goes to 120%)
+                if (width > 100) {
+                    text.innerText = width + '%';
+                    text.style.color = '#facc15'; // Yellow text
+                    bar.style.background = '#facc15'; // Yellow bar
+                    warning.classList.remove('hidden');
+                }
+                
+                // Finish
+                if (width >= 120) {
+                    clearInterval(interval);
+                    setTimeout(() => showScreen('compliments'), 1500);
+                }
+            }, 40); // 40ms delay = smooth speed
+        }
+
+        // Logic to go to message screen and start typing
+        function goToMessage() {
+            showScreen('message');
+            setTimeout(startTyping, 1000); // Wait for transition
+        }
+
+        // Logic for Screen 4: Typewriter
+        function startTyping() {
+            let index = 0;
+            const display = document.getElementById('typed-text');
+            const box = document.getElementById('message-box');
+            display.classList.add('typing-cursor');
+            
+            const typingInterval = setInterval(() => {
+                if (index < messageText.length) {
+                    display.innerText = messageText.slice(0, index + 1);
+                    index++;
+                    // Auto-scroll to bottom
+                    box.scrollTop = box.scrollHeight;
+                } else {
+                    clearInterval(typingInterval);
+                    display.classList.remove('typing-cursor');
+                    // Show final button
+                    document.getElementById('final-btn').classList.remove('hidden');
+                }
+            }, 40); // Typing speed
+        }
+    </script>
+</body>
+</html>
