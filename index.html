@@ -15,7 +15,7 @@
         /* --- CORE STYLES --- */
         :root {
             --background: #0a0a0a;
-            --primary: #ec4899; /* Pink-500 */
+            --primary: #ec4899;
         }
         body {
             background-color: var(--background);
@@ -26,20 +26,17 @@
         }
         .font-dancing { font-family: 'Dancing Script', cursive; }
 
-        /* --- AMBIENT GLOW --- */
+        /* --- AMBIENT GLOW BACKGROUND --- */
         .glow-bg {
             position: absolute;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, rgba(0,0,0,0) 70%);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(236, 72, 153, 0.15) 0%, rgba(0,0,0,0) 70%);
             pointer-events: none;
             z-index: -1;
         }
 
-        /* --- BUTTON GLOW --- */
+        /* --- BUTTON GLOW EFFECT --- */
         .btn-glow {
             box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
             transition: all 0.3s ease;
@@ -50,7 +47,6 @@
         }
 
         /* --- ANIMATIONS --- */
-        /* Fade In Up */
         .fade-in {
             opacity: 0;
             transform: translateY(20px);
@@ -84,17 +80,19 @@
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(236, 72, 153, 0.3);
             transition: all 0.4s ease;
+            cursor: pointer;
         }
         .heart-btn.revealed {
             background: rgba(236, 72, 153, 0.2);
             border-color: #ec4899;
             color: white;
+            box-shadow: 0 0 10px rgba(236, 72, 153, 0.3);
         }
 
         /* Light Pink Letter Card */
         .pink-paper {
-            background-color: #fdf2f8; /* Pink-50 */
-            color: #831843; /* Pink-900 */
+            background-color: #fdf2f8; /* Very light pink */
+            color: #831843; /* Dark pink text */
             background-image: linear-gradient(#fbcfe8 1px, transparent 1px);
             background-size: 100% 24px;
         }
@@ -111,7 +109,7 @@
 
     <div class="glow-bg"></div>
 
-    <div id="app" class="relative w-full max-w-md mx-auto h-screen p-4">
+    <div id="app" class="relative w-full max-w-md mx-auto h-screen p-4 flex flex-col justify-center">
 
         <div id="intro" class="screen active">
             <div class="mb-8 w-40 h-40 rounded-full bg-pink-500/10 border-2 border-pink-500/30 flex items-center justify-center overflow-hidden backdrop-blur-sm fade-in">
@@ -137,8 +135,8 @@
             
             <h1 id="load-percent" class="text-6xl font-bold mb-8 text-white">0%</h1>
             
-            <div class="w-64 h-4 bg-gray-800 rounded-full overflow-hidden border border-gray-700 relative">
-                <div id="load-bar" class="h-full bg-gradient-to-r from-pink-500 to-rose-500 w-0 transition-all duration-75"></div>
+            <div class="w-64 h-4 bg-gray-800 rounded-full overflow-hidden border border-gray-700 relative shadow-[0_0_15px_rgba(236,72,153,0.3)]">
+                <div id="load-bar" class="h-full bg-gradient-to-r from-pink-500 to-rose-500 w-0 transition-all duration-75 box-shadow-[0_0_10px_#ec4899]"></div>
             </div>
             
             <p id="load-warning" class="mt-6 text-yellow-400 font-bold hidden animate-pulse">
@@ -173,42 +171,42 @@
 
 
         <div id="envelope-screen" class="screen">
-            <h2 class="text-4xl font-dancing mb-10 text-white fade-in">A little note for you</h2>
+            <h2 class="text-4xl font-dancing mb-12 text-white fade-in">A little note for you</h2>
             
             <div onclick="openLetter()" class="cursor-pointer envelope-anim fade-in delay-300 group">
-                <div class="w-48 h-32 bg-pink-100 rounded-lg flex items-center justify-center relative shadow-[0_0_30px_rgba(236,72,153,0.4)] border-4 border-pink-300 group-hover:scale-105 transition-transform">
-                    <i data-lucide="heart" class="w-12 h-12 text-pink-500 fill-pink-500"></i>
-                    <div class="absolute w-full h-1 bg-pink-200 top-1/2 transform -translate-y-1/2"></div>
-                    <div class="absolute h-full w-1 bg-pink-200 left-1/2 transform -translate-x-1/2"></div>
+                <div class="w-56 h-36 bg-pink-100 rounded-lg flex items-center justify-center relative shadow-[0_0_40px_rgba(236,72,153,0.5)] border-4 border-pink-300 group-hover:scale-105 transition-transform">
+                    <i data-lucide="heart" class="w-16 h-16 text-pink-500 fill-pink-500 z-10"></i>
+                    <div class="absolute w-full h-2 bg-pink-200 top-1/2 transform -translate-y-1/2"></div>
+                    <div class="absolute h-full w-2 bg-pink-200 left-1/2 transform -translate-x-1/2"></div>
                 </div>
-                <p class="mt-4 text-gray-300 text-sm font-semibold tracking-wider">TAP TO OPEN</p>
+                <p class="mt-6 text-gray-300 text-sm font-semibold tracking-widest uppercase text-center">Tap to open</p>
             </div>
         </div>
 
 
         <div id="letter-screen" class="screen">
-            <div id="letter-card" class="pink-paper p-6 rounded-lg shadow-2xl max-w-sm w-full transform scale-0 transition-transform duration-700 overflow-y-auto max-h-[70vh]">
-                <p class="text-lg leading-relaxed font-medium">
+            <div id="letter-card" class="pink-paper p-8 rounded-lg shadow-2xl max-w-sm w-full transform scale-0 transition-transform duration-700 mb-8 overflow-y-auto max-h-[60vh]">
+                <p class="text-lg leading-relaxed font-medium text-pink-900">
                     I just wanted to tell you something... you really are special in a way that’s hard to explain.
                     <br><br>
                     There’s a softness in the way you talk, a sweetness in the way you smile, and something genuine about you that just feels good to be around.
                     <br><br>
                     You don’t try to be anything extra, you’re just you, and that’s what makes you so lovely.
                 </p>
-                <p class="mt-4 text-right font-dancing text-2xl font-bold text-pink-600">- For you</p>
+                <p class="mt-6 text-right font-dancing text-2xl font-bold text-pink-600">- For you</p>
             </div>
 
-            <button onclick="showScreen('final')" class="mt-8 text-white/70 hover:text-white transition-colors flex items-center gap-2">
-                Close <i data-lucide="x" class="w-4 h-4"></i>
+            <button onclick="showScreen('final')" class="animate-bounce btn-glow bg-gradient-to-r from-pink-500 to-rose-500 text-white px-10 py-3 rounded-full text-lg font-semibold flex items-center gap-2 shadow-xl">
+                One more thing <i data-lucide="arrow-right" class="w-5 h-5"></i>
             </button>
         </div>
 
 
         <div id="final" class="screen">
-            <div class="w-48 h-48 rounded-full bg-pink-500/10 flex items-center justify-center mb-8 fade-in">
+            <div class="w-48 h-48 rounded-full bg-pink-500/10 border-2 border-pink-500/20 flex items-center justify-center mb-8 fade-in">
                 <img src="cute.gif" class="w-40 h-40 object-contain" alt="Cute">
             </div>
-            <h2 class="text-4xl md:text-5xl font-dancing text-white fade-in delay-300">
+            <h2 class="text-4xl md:text-5xl font-dancing text-white fade-in delay-300 text-center leading-snug">
                 You’ll always be <br> special to me ❤️
             </h2>
         </div>
@@ -216,24 +214,19 @@
     </div>
 
     <script>
-        // Init Icons
         lucide.createIcons();
 
-        // Animation Helper
         function triggerAnimations(screenId) {
             const screen = document.getElementById(screenId);
             const elements = screen.querySelectorAll('.fade-in');
             elements.forEach(el => {
                 el.classList.remove('visible');
-                // Force reflow
-                void el.offsetWidth; 
-                // Add visible class based on delay
+                void el.offsetWidth; // reset animation
                 const delay = getComputedStyle(el).transitionDelay || '0s';
                 setTimeout(() => el.classList.add('visible'), 50);
             });
         }
 
-        // Screen Switcher
         function showScreen(id) {
             document.querySelectorAll('.screen').forEach(s => {
                 s.classList.remove('active');
@@ -250,7 +243,6 @@
             }, 50);
         }
 
-        // Start (Screen 1 -> 2)
         function startLoading() {
             showScreen('loading');
             let width = 0;
@@ -273,15 +265,14 @@
                     clearInterval(interval);
                     setTimeout(() => showScreen('compliments'), 1000);
                 }
-            }, 50); // Slower loading
+            }, 50);
         }
 
-        // Reveal Compliments (Screen 3)
         let revealedCount = 0;
         function reveal(btn, text) {
             if (!btn.classList.contains('revealed')) {
                 btn.classList.add('revealed');
-                btn.innerHTML = `<span class="text-white font-medium text-sm md:text-base animate-pulse">${text}</span>`;
+                btn.innerHTML = `<span class="text-pink-100 font-medium text-sm md:text-base animate-pulse">${text}</span>`;
                 revealedCount++;
                 if (revealedCount === 4) {
                     setTimeout(() => {
@@ -291,7 +282,6 @@
             }
         }
 
-        // Open Letter (Screen 4 -> 5)
         function openLetter() {
             showScreen('letter-screen');
             setTimeout(() => {
@@ -299,7 +289,6 @@
             }, 300);
         }
 
-        // Initialize first screen animations
         window.onload = () => triggerAnimations('intro');
     </script>
 </body>
