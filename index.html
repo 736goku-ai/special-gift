@@ -2,9 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>For You ❤️</title>
     
+    <link rel="preload" as="image" href="waving.gif">
+    <link rel="preload" as="image" href="cute.gif">
+
     <script src="https://cdn.tailwindcss.com"></script>
     
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
@@ -22,11 +25,13 @@
             color: white;
             font-family: 'Quicksand', sans-serif;
             overflow: hidden;
-            user-select: none;
+            /* Prevent double-tap zoom on mobile for faster clicks */
+            touch-action: manipulation; 
+            -webkit-tap-highlight-color: transparent;
         }
         .font-dancing { font-family: 'Dancing Script', cursive; }
 
-        /* --- AMBIENT GLOW BACKGROUND --- */
+        /* --- AMBIENT GLOW --- */
         .glow-bg {
             position: absolute;
             width: 100%;
@@ -36,14 +41,13 @@
             z-index: -1;
         }
 
-        /* --- BUTTON GLOW EFFECT --- */
+        /* --- BUTTON GLOW --- */
         .btn-glow {
             box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
-            transition: all 0.3s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        .btn-glow:hover {
-            box-shadow: 0 0 25px rgba(236, 72, 153, 0.8);
-            transform: scale(1.05);
+        .btn-glow:active {
+            transform: scale(0.95);
         }
 
         /* --- ANIMATIONS --- */
@@ -68,31 +72,58 @@
             position: absolute;
             top: 0;
             left: 0;
-            transition: opacity 0.5s;
+            transition: opacity 0.5s ease-in-out;
         }
         .screen.active {
             display: flex;
             z-index: 10;
         }
 
-        /* Heart Reveal Button */
+        /* --- HEART REVEAL BUTTONS (FIXED) --- */
         .heart-btn {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(236, 72, 153, 0.3);
-            transition: all 0.4s ease;
-            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Snappy transition */
         }
-        .heart-btn.revealed {
-            background: rgba(236, 72, 153, 0.2);
-            border-color: #ec4899;
-            color: white;
-            box-shadow: 0 0 10px rgba(236, 72, 153, 0.3);
+        
+        /* The Text inside the button (Hidden initially) */
+        .heart-btn .msg-text {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.3s ease;
         }
 
-        /* Light Pink Letter Card */
+        /* The Icon inside the button (Visible initially) */
+        .heart-btn .icon-heart {
+            position: absolute;
+            opacity: 1;
+            transform: scale(1);
+            transition: all 0.3s ease;
+        }
+
+        /* Revealed State */
+        .heart-btn.revealed {
+            background: rgba(236, 72, 153, 0.2); /* Pink background */
+            border-color: #ec4899;
+            box-shadow: 0 0 15px rgba(236, 72, 153, 0.2);
+        }
+        
+        /* Switch Visibility when revealed */
+        .heart-btn.revealed .msg-text {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .heart-btn.revealed .icon-heart {
+            opacity: 0;
+            transform: scale(1.5); /* Zoom out effect */
+        }
+
+        /* --- LETTER STYLES --- */
         .pink-paper {
-            background-color: #fdf2f8; /* Very light pink */
-            color: #831843; /* Dark pink text */
+            background-color: #fdf2f8;
+            color: #831843;
             background-image: linear-gradient(#fbcfe8 1px, transparent 1px);
             background-size: 100% 24px;
         }
@@ -136,7 +167,7 @@
             <h1 id="load-percent" class="text-6xl font-bold mb-8 text-white">0%</h1>
             
             <div class="w-64 h-4 bg-gray-800 rounded-full overflow-hidden border border-gray-700 relative shadow-[0_0_15px_rgba(236,72,153,0.3)]">
-                <div id="load-bar" class="h-full bg-gradient-to-r from-pink-500 to-rose-500 w-0 transition-all duration-75 box-shadow-[0_0_10px_#ec4899]"></div>
+                <div id="load-bar" class="h-full bg-gradient-to-r from-pink-500 to-rose-500 w-0 transition-all duration-75"></div>
             </div>
             
             <p id="load-warning" class="mt-6 text-yellow-400 font-bold hidden animate-pulse">
@@ -150,17 +181,24 @@
             <p class="text-gray-400 mb-8 text-sm fade-in delay-200">Tap each heart to reveal ❤️</p>
 
             <div class="flex flex-col gap-4 w-full px-4">
-                <button onclick="reveal(this, 'You look adorable')" class="heart-btn p-4 rounded-xl flex items-center justify-center text-pink-400 fade-in delay-300 h-16">
-                    <i data-lucide="heart" class="w-6 h-6"></i>
+                <button onclick="reveal(this)" class="heart-btn p-4 rounded-xl flex items-center justify-center fade-in delay-300 h-16 w-full">
+                    <div class="icon-heart"><i data-lucide="heart" class="w-6 h-6 text-pink-400"></i></div>
+                    <span class="msg-text font-medium text-pink-100 text-sm md:text-base">You look adorable</span>
                 </button>
-                <button onclick="reveal(this, 'You have the sweetest vibe')" class="heart-btn p-4 rounded-xl flex items-center justify-center text-pink-400 fade-in delay-500 h-16">
-                    <i data-lucide="heart" class="w-6 h-6"></i>
+
+                <button onclick="reveal(this)" class="heart-btn p-4 rounded-xl flex items-center justify-center fade-in delay-500 h-16 w-full">
+                    <div class="icon-heart"><i data-lucide="heart" class="w-6 h-6 text-pink-400"></i></div>
+                    <span class="msg-text font-medium text-pink-100 text-sm md:text-base">You have the sweetest vibe</span>
                 </button>
-                <button onclick="reveal(this, 'You make things feel lighter')" class="heart-btn p-4 rounded-xl flex items-center justify-center text-pink-400 fade-in delay-700 h-16">
-                    <i data-lucide="heart" class="w-6 h-6"></i>
+
+                <button onclick="reveal(this)" class="heart-btn p-4 rounded-xl flex items-center justify-center fade-in delay-700 h-16 w-full">
+                    <div class="icon-heart"><i data-lucide="heart" class="w-6 h-6 text-pink-400"></i></div>
+                    <span class="msg-text font-medium text-pink-100 text-sm md:text-base">You make things feel lighter</span>
                 </button>
-                <button onclick="reveal(this, 'You are naturally charming')" class="heart-btn p-4 rounded-xl flex items-center justify-center text-pink-400 fade-in delay-900 h-16">
-                    <i data-lucide="heart" class="w-6 h-6"></i>
+
+                <button onclick="reveal(this)" class="heart-btn p-4 rounded-xl flex items-center justify-center fade-in delay-900 h-16 w-full">
+                    <div class="icon-heart"><i data-lucide="heart" class="w-6 h-6 text-pink-400"></i></div>
+                    <span class="msg-text font-medium text-pink-100 text-sm md:text-base">You are naturally charming</span>
                 </button>
             </div>
 
@@ -221,8 +259,7 @@
             const elements = screen.querySelectorAll('.fade-in');
             elements.forEach(el => {
                 el.classList.remove('visible');
-                void el.offsetWidth; // reset animation
-                const delay = getComputedStyle(el).transitionDelay || '0s';
+                void el.offsetWidth; // force reflow
                 setTimeout(() => el.classList.add('visible'), 50);
             });
         }
@@ -265,18 +302,24 @@
                     clearInterval(interval);
                     setTimeout(() => showScreen('compliments'), 1000);
                 }
-            }, 50);
+            }, 40);
         }
 
+        // IMPROVED: Smooth Reveal
         let revealedCount = 0;
-        function reveal(btn, text) {
+        function reveal(btn) {
             if (!btn.classList.contains('revealed')) {
+                // Just add class - CSS handles the rest!
                 btn.classList.add('revealed');
-                btn.innerHTML = `<span class="text-pink-100 font-medium text-sm md:text-base animate-pulse">${text}</span>`;
+                
                 revealedCount++;
                 if (revealedCount === 4) {
                     setTimeout(() => {
-                        document.getElementById('next-btn').style.display = 'block';
+                        const nextBtn = document.getElementById('next-btn');
+                        nextBtn.style.display = 'block';
+                        // Small animation to show the button appearing
+                        nextBtn.style.opacity = '0';
+                        setTimeout(() => nextBtn.style.opacity = '1', 50);
                     }, 500);
                 }
             }
